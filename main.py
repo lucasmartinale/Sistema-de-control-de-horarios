@@ -8,16 +8,15 @@ from tkinter import ttk
 
 def limpiezaExcel(df):
     df=df.drop(columns=['Num', 'Department','Verifycode','Device ID','Device Name','UserExtFmt'])
-    print(df)
     
     #Extraer fecha y hora
     df['Fecha']=df['Date/Time'].str.extract('(....-..-..)',expand=True)
     df['Hora']=df['Date/Time'].str.extract('(..:..:..)',expand=True)
 
-    print(df)
     caja_de_texto.insert(0,"Se ha realizado limpieza de datos")
+    df.to_excel('limpio.xlsx',index=False)
     return df
-    #df.to_excel('limpio.xlsx',index=False)
+    
 
 def extraerListaNombres(df):
     #borrar todas las columnas que no sean nombres
@@ -41,35 +40,60 @@ def abrirArchivo():
      df= limpiezaExcel(df)
      extraerListaNombres(df)
 
+def cargarListaPersonas():
+    excelNombres = pd.read_excel('ListaNombres.xlsx')  
+    excelNombres.reset_index(drop=True, inplace=True)
+    nombres=excelNombres["Name"]
+    vlist=[]
+
+    for i in nombres:
+        vlist.append(i)
+    
+    return vlist
+
+
 
 
 if __name__ == "__main__":
     raiz=Tk()
-    raiz.geometry('410x310')
+    raiz.geometry('410x350')
     raiz.title("Sistema de control de horarios - Hogar Don Bosco")
 
     #Frames
     frame = Frame(raiz, width=500,height=100)
-    frame.config(bg="lightblue")   
+    frame.config(bg="deep sky blue")   
     frame.pack()
 
     frame2 = Frame(raiz,width=500,height=100)  
-    frame.config(bg="lightgreen")   
+    frame2.config(bg="gold")   
     frame2.pack()
 
-    frame3 = Frame(raiz,width=500,height=450)  
-    frame.config(bg="lightblue")   
+    frame3 = Frame(raiz,width=500,height=100)  
+    frame3.config(bg="SlateBlue2")   
     frame3.pack()
+
+    frame4 = Frame(raiz,width=500,height=450)  
+    frame4.config(bg="SpringGreen2")   
+    frame4.pack()
     
     #Elementos de la ventana
     label = Label(frame,text="Hogar Don Bosco")
     label.config(font=("Arial",24)) 
     label.pack()
     
+    # ...................ComboBox....................
+
+    vlist=cargarListaPersonas()
     
+    Combo = ttk.Combobox(frame3, values = vlist)
+    Combo.config(width=200)
+    Combo.set("Seleccione a un empleado")
+    Combo.pack(padx = 5, pady = 5)
+    #...........................................
+
     Button(frame2, text="Abrir archivo", command=abrirArchivo).pack()
     
-    caja_de_texto = tk.Listbox(frame3)
+    caja_de_texto = tk.Listbox(frame4)
     caja_de_texto.place(x=5, y=25, width=400, height=200)   
     
     raiz.mainloop()

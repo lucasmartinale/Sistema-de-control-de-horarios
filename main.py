@@ -6,6 +6,47 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk
 
+def definirTurno():
+    excelLimpio = pd.read_excel('limpio.xlsx')  
+    #Se filtran las filas que son C/in (osea entradas)
+    entradas_cin = excelLimpio['Clock-in/out'] == "C/In"
+    entradas_limpias=excelLimpio[entradas_cin]
+    entradas_limpias.to_excel('soloEntradas.xlsx',index=False)
+
+    
+    excelLimpio = pd.read_excel('soloEntradas.xlsx') 
+    excelLimpio['Turno']="Nada"
+
+    for i, fila in excelLimpio.iterrows():
+        #con ese numero determinar el turno
+        #extraemos los dos primeros caracteres
+        subcadena = fila['Hora'][0:2]
+        #lo convertimos en numero
+        numero_hora=int(subcadena)
+        #en base al numero determinamos el turno
+        
+        if 20<=numero_hora<=23:
+            print("Turno Nocturno")
+            excelLimpio.at[i,'Turno']='Nocturno'
+        elif 0<=numero_hora<=5:
+            print("Turno Nocturno ")
+            excelLimpio.at[i,'Turno']='Nocturno'
+        elif 4<=numero_hora<=12:
+            print("Turno Mañana")
+            excelLimpio.at[i,'Turno']='Mañana'
+        elif 13<=numero_hora<=19:
+            print("Turno Tarde")
+            excelLimpio.at[i,'Turno']='Tarde'
+        else:
+            print("Error")
+    excelLimpio.to_excel('soloEntradas.xlsx',index=False)
+        
+
+        
+
+
+
+
 def limpiezaExcel(df):
     df=df.drop(columns=['Num', 'Department','Verifycode','Device ID','Device Name','UserExtFmt'])
     
@@ -29,7 +70,6 @@ def extraerListaNombres(df):
     df.to_excel('ListaNombres.xlsx',index=False)
     caja_de_texto.insert(0,"Se ha extraido la lista de personas")
 
-
 def abrirArchivo():
      path_archivo = filedialog.askopenfilename(title="Abrir", initialdir=r"C:\Users\Lucas\Desktop\Practicas comunitarias Don Bosco")
      print(path_archivo) #en archivo se guarda el path del archivo que quiero abrir
@@ -39,6 +79,7 @@ def abrirArchivo():
      #Acciones que suceden despues de abrir el libro
      df= limpiezaExcel(df)
      extraerListaNombres(df)
+     definirTurno()
 
 def cargarListaPersonas():
     excelNombres = pd.read_excel('ListaNombres.xlsx')  

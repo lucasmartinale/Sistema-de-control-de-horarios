@@ -26,25 +26,17 @@ def definirTurno():
         #en base al numero determinamos el turno
         
         if 20<=numero_hora<=23:
-            print("Turno Nocturno")
             excelLimpio.at[i,'Turno']='Nocturno'
-        elif 0<=numero_hora<=5:
-            print("Turno Nocturno ")
+        elif 0<=numero_hora<=3:
             excelLimpio.at[i,'Turno']='Nocturno'
         elif 4<=numero_hora<=12:
-            print("Turno Mañana")
             excelLimpio.at[i,'Turno']='Mañana'
         elif 13<=numero_hora<=19:
-            print("Turno Tarde")
             excelLimpio.at[i,'Turno']='Tarde'
         else:
             print("Error")
     excelLimpio.to_excel('soloEntradas.xlsx',index=False)
         
-
-        
-
-
 
 
 def limpiezaExcel(df):
@@ -58,7 +50,6 @@ def limpiezaExcel(df):
     df.to_excel('limpio.xlsx',index=False)
     return df
     
-
 def extraerListaNombres(df):
     #borrar todas las columnas que no sean nombres
     df=df.drop(columns=['ID', 'Date/Time','Clock-in/out','Fecha','Hora'])
@@ -91,9 +82,6 @@ def cargarListaPersonas():
         vlist.append(i)
     
     return vlist
-
-
-
 
 if __name__ == "__main__":
     raiz=Tk()

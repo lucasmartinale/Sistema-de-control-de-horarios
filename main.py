@@ -6,6 +6,24 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk
 
+
+#Crea un excel para cada empleado con sus respectivas entradas y salidas
+def dividirEmpleadosEnExcels():
+    excelLimpio = pd.read_excel('limpio.xlsx')  
+    listaNombres = pd.read_excel('ListaNombres.xlsx')  
+
+    #guardo los nombres en un array
+    vector_nombres = list(listaNombres['Name'])
+
+    #recorrer listaNombres
+    for i in vector_nombres :
+
+        filas_persona = excelLimpio['Name'] == i
+        filas_que_cumplen = excelLimpio[filas_persona]
+        filas_que_cumplen.to_excel(i+'_horarios.xlsx', index=False)
+
+
+
 def definirTurno():
     excelLimpio = pd.read_excel('limpio.xlsx')  
     #Se filtran las filas que son C/in (osea entradas)
@@ -36,8 +54,6 @@ def definirTurno():
         else:
             print("Error")
     excelLimpio.to_excel('soloEntradas.xlsx',index=False)
-        
-
 
 def limpiezaExcel(df):
     df=df.drop(columns=['Num', 'Department','Verifycode','Device ID','Device Name','UserExtFmt'])
@@ -84,6 +100,7 @@ def cargarListaPersonas():
     return vlist
 
 if __name__ == "__main__":
+    dividirEmpleadosEnExcels()  #TODO: CAMBIARLE EL LUGAR EN DONDE SE IMPLEMENTA, ESTA ACA SOLO PARA TESTEAR
     raiz=Tk()
     raiz.geometry('410x350')
     raiz.title("Sistema de control de horarios - Hogar Don Bosco")

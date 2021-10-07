@@ -1,3 +1,2 @@
-limpio.xlsx
-ListaNombres.xlsx
+*.xlsx
 __pycache__

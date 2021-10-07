@@ -84,7 +84,7 @@ def abrirArchivo():
      messagebox.showinfo(message="El archivo ha sido importado", title="Horarios cargados")
 
      #Acciones que suceden despues de abrir el libro
-     df= limpiezaExcel(df)
+     df= limpiezaExcel(df)  #guarda el limpio en df
      extraerListaNombres(df)
      definirTurno()
 
@@ -100,7 +100,7 @@ def cargarListaPersonas():
     return vlist
 
 if __name__ == "__main__":
-    dividirEmpleadosEnExcels()  #TODO: CAMBIARLE EL LUGAR EN DONDE SE IMPLEMENTA, ESTA ACA SOLO PARA TESTEAR
+    
     raiz=Tk()
     raiz.geometry('410x350')
     raiz.title("Sistema de control de horarios - Hogar Don Bosco")
@@ -127,6 +127,13 @@ if __name__ == "__main__":
     label.config(font=("Arial",24)) 
     label.pack()
     
+    #...........................................
+
+    Button(frame2, text="Abrir archivo", command=abrirArchivo).pack()
+    
+    caja_de_texto = tk.Listbox(frame4)
+    caja_de_texto.place(x=5, y=25, width=400, height=200)   
+
     # ...................ComboBox....................
 
     vlist=cargarListaPersonas()
@@ -135,12 +142,7 @@ if __name__ == "__main__":
     Combo.config(width=200)
     Combo.set("Seleccione a un empleado")
     Combo.pack(padx = 5, pady = 5)
-    #...........................................
-
-    Button(frame2, text="Abrir archivo", command=abrirArchivo).pack()
     
-    caja_de_texto = tk.Listbox(frame4)
-    caja_de_texto.place(x=5, y=25, width=400, height=200)   
     
     raiz.mainloop()
 

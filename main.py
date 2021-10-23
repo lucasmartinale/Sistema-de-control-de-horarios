@@ -23,30 +23,46 @@ def procesarHorarioPersona(_nombre_persona):
     # guardo los nombres en un array
     lista_cin_cout = list(df['Clock-in/out'])
 
-    # iterar filas
-    # Iteración por filas del DataFrame:
-    for indice_fila, fila in df.iterrows():
-        print(indice_fila)
-	    #print(fila["Hora"])  
+    #print("Valor 0:")
+    #print(df.loc[0])
+    #print("Valor 1:")
+    #print(df.loc[1])
+    #print("Valor 2:")
+    #print(df.loc[2])
 
-        #es un c/in?
-        if(fila["Clock-in/out"] == "C/In"):
-            #El proximo es c/out?
-            print("Es C/IN")
+    
+    cant_filas=range(df.shape[0])  #es un rango
+    print("Cantidad de filas:", cant_filas)
+    for i in cant_filas:
 
-            print(".:Esto es shift:.")
-            print(fila['Clock-in/out'].shift(-1))
-            df['Clock-in/out'].shift().where(df['Letter'].shift() == df['Letter'], '')
+        if(i != df.shape[0]-1):   #Si no es la ultima fila
+            print("Fila:", i+2)
+            #¿es un c/in?
+            if(df.loc[i]["Clock-in/out"] == "C/In"):
+                print("Es C/IN")
+                print(df.loc[i]["Date/Time"])
 
-            #if(fila['Clock-in/out'].shift(-1) == "C/Out"):
-            #    print("     ES UN C/OUT")
-            #else:
-            #    print("     NO ES UN C/OUT")
-            
-        else:
-            print("Es C/OUT")
-
-
+                # ¿El siguiente es un c/out?
+                #Si
+                if(df.loc[i+1]["Clock-in/out"] == "C/Out"):
+                    print("Es un C/OUT el que le sigue")
+                    print(df.loc[i+1]["Date/Time"])
+                #No
+                else:
+                    print("Es un C/IN el que le sigue")
+                    print(df.loc[i+1]["Date/Time"])
+            #Es un c/out
+            else:
+                print("Es un C/OUT")
+            print("------------------------")
+        else:  #Si es la ultima fila
+            print(".:Ultima Fila:.")
+            if(df.loc[i]["Clock-in/out"] == "C/In"):
+                print("ES C/IN")
+                print(df.loc[i]["Date/Time"])
+            else:
+                print("ES C/OUT")
+    
 
 
 def procesarTodosLosHorarios():

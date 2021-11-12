@@ -2,15 +2,14 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 import pandas as pd
-
 import tkinter as tk
 from tkinter import ttk
-
 import os
 
 
 def procesarHorarioPersona(_nombre_persona):
     print("-------->procesarHorarioPersona")
+    caja_de_texto.insert(0, "Procesar horario de persona")
 
     # Busca el path de la carpeta raiz
     path_excelsPersonas = os.getcwd()
@@ -23,13 +22,10 @@ def procesarHorarioPersona(_nombre_persona):
     # guardo los nombres en un array
     lista_cin_cout = list(df['Clock-in/out'])
 
-    #print("Valor 0:")
-    #print(df.loc[0])
-    #print("Valor 1:")
-    #print(df.loc[1])
-    #print("Valor 2:")
-    #print(df.loc[2])
-
+    #Se crea dataframe para los horarios que no tienen errores
+    df_sin_errores = pd.DataFrame(columns = ['Name', 'ID', 'Date/Time', 'Clock-in/out', 'Fecha','Hora'])
+    #Se crea un dataframe para los horarios con errores
+    df_errores = pd.DataFrame(columns = ['Name', 'ID', 'Date/Time', 'Clock-in/out', 'Fecha','Hora'])
     
     cant_filas=range(df.shape[0])  #es un rango
     print("Cantidad de filas:", cant_filas)
@@ -39,18 +35,60 @@ def procesarHorarioPersona(_nombre_persona):
             print("Fila:", i+2)
             #¿es un c/in?
             if(df.loc[i]["Clock-in/out"] == "C/In"):
-                print("Es C/IN")
-                print(df.loc[i]["Date/Time"])
 
                 # ¿El siguiente es un c/out?
                 #Si
                 if(df.loc[i+1]["Clock-in/out"] == "C/Out"):
                     print("Es un C/OUT el que le sigue")
                     print(df.loc[i+1]["Date/Time"])
+
+                    #Se guardan las 2 filas en excel sin_errores
+                    #Guarda primera fila
+                    fila_a_insertar = {'Name': df.loc[i]['Name'],
+                                        'ID': df.loc[i]['ID'],
+                                        'Date/Time': df.loc[i]['Date/Time'],
+                                        'Clock-in/out': df.loc[i]['Clock-in/out'],
+                                        'Fecha': df.loc[i]['Fecha'],
+                                        'Hora': df.loc[i]['Hora'],
+                                        }
+
+                    df_sin_errores=df_sin_errores.append(fila_a_insertar, ignore_index = True)
+                    #Guarda segunda fila
+                    fila_a_insertar = {'Name': df.loc[i+1]['Name'],
+                                        'ID': df.loc[i+1]['ID'],
+                                        'Date/Time': df.loc[i+1]['Date/Time'],
+                                        'Clock-in/out': df.loc[i+1]['Clock-in/out'],
+                                        'Fecha': df.loc[i+1]['Fecha'],
+                                        'Hora': df.loc[i+1]['Hora'],
+                                        }
+                    
+                    df_sin_errores=df_sin_errores.append(fila_a_insertar, ignore_index = True)
+                    
+
                 #No
                 else:
-                    print("Es un C/IN el que le sigue")
-                    print(df.loc[i+1]["Date/Time"])
+                    #Guarda primera fila en archivo de errores
+                    fila_a_insertar = {'Name': df.loc[i]['Name'],
+                                        'ID': df.loc[i]['ID'],
+                                        'Date/Time': df.loc[i]['Date/Time'],
+                                        'Clock-in/out': df.loc[i]['Clock-in/out'],
+                                        'Fecha': df.loc[i]['Fecha'],
+                                        'Hora': df.loc[i]['Hora'],
+                                        }
+
+                    df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
+                    #Guarda segunda fila en archivo de errores
+                    fila_a_insertar = {'Name': df.loc[i+1]['Name'],
+                                        'ID': df.loc[i+1]['ID'],
+                                        'Date/Time': df.loc[i+1]['Date/Time'],
+                                        'Clock-in/out': df.loc[i+1]['Clock-in/out'],
+                                        'Fecha': df.loc[i+1]['Fecha'],
+                                        'Hora': df.loc[i+1]['Hora'],
+                                        }
+                    
+                    df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
+
+
             #Es un c/out
             else:
                 print("Es un C/OUT")
@@ -62,11 +100,16 @@ def procesarHorarioPersona(_nombre_persona):
                 print(df.loc[i]["Date/Time"])
             else:
                 print("ES C/OUT")
+
+    df_sin_errores.to_excel('sin_errores.xlsx', index=False)
+    df_errores.to_excel('errores.xlsx', index=False)
+    
     
 
 
 def procesarTodosLosHorarios():
     print("-------->ProcesarTodosLosHorarios")
+    caja_de_texto.insert(0, "Procesar todos los horarios")
     # TODO: Tomar la lista de personas y ponerla en un vector
 
     # TODO: Hacer un while que tome los excels de las personas
@@ -78,6 +121,7 @@ def procesarTodosLosHorarios():
 # Crea un excel para cada empleado con sus respectivas entradas y salidas
 def dividirEmpleadosEnExcels():
     print("-------->dividirEmpleadosEnExcels")
+    caja_de_texto.insert(0, "Dividir los empleados en excels")
 
     excelLimpio = pd.read_excel('limpio.xlsx')
     listaNombres = pd.read_excel('ListaNombres.xlsx')
@@ -135,6 +179,7 @@ def definirTurno():
 
 def limpiezaExcel(df):
     print("-------->limpiezaExcel")
+    caja_de_texto.insert(0, "Limpieza de Excel")
     df = df.drop(columns=['Num', 'Department', 'Verifycode',
                  'Device ID', 'Device Name', 'UserExtFmt'])
 

@@ -91,8 +91,18 @@ def procesarHorarioPersona(_nombre_persona):
 
             #Es un c/out
             else:
-                print("Es un C/OUT")
-            print("------------------------")
+                #Va a el excel de errores
+                fila_a_insertar = {'Name': df.loc[i]['Name'],
+                                        'ID': df.loc[i]['ID'],
+                                        'Date/Time': df.loc[i]['Date/Time'],
+                                        'Clock-in/out': df.loc[i]['Clock-in/out'],
+                                        'Fecha': df.loc[i]['Fecha'],
+                                        'Hora': df.loc[i]['Hora'],
+                                        }
+                    
+                df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
+
+
         else:  #Si es la ultima fila
             print(".:Ultima Fila:.")
             if(df.loc[i]["Clock-in/out"] == "C/In"):
@@ -111,6 +121,7 @@ def procesarTodosLosHorarios():
     print("-------->ProcesarTodosLosHorarios")
     caja_de_texto.insert(0, "Procesar todos los horarios")
     # TODO: Tomar la lista de personas y ponerla en un vector
+    
 
     # TODO: Hacer un while que tome los excels de las personas
     # Dentro del while busca el nombre que coincide con el elemento de la lista de personas

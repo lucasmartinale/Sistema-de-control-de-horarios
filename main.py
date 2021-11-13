@@ -11,8 +11,7 @@ from os import remove
 
 def procesarHorarioPersona(_nombre_persona):
     print("-------->procesarHorarioPersona")
-    caja_de_texto.insert(0, "Procesar horario de persona")
-
+    
     # Busca el path de la carpeta raiz
     path_raiz = os.getcwd()
 
@@ -99,24 +98,13 @@ def procesarHorarioPersona(_nombre_persona):
                     
                 df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
 
-
-        else:  #Si es la ultima fila
-            print(".:Ultima Fila:.")
-            if(df.loc[i]["Clock-in/out"] == "C/In"):
-                print("ES C/IN")
-                print(df.loc[i]["Date/Time"])
-            else:
-                print("ES C/OUT")
-
     df_sin_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_sin_errores.xlsx', index=False)
     df_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_errores.xlsx', index=False)
-   
-    
 
 
 def procesarTodosLosHorarios():
     print("-------->ProcesarTodosLosHorarios")
-    caja_de_texto.insert(0, "Procesar todos los horarios")
+    
     # TODO: Tomar la lista de personas y ponerla en un vector
     listaNombres = pd.read_excel('ListaNombres.xlsx')
     vector_nombres = list(listaNombres['Name'])
@@ -125,12 +113,14 @@ def procesarTodosLosHorarios():
     # Dentro del while busca el nombre que coincide con el elemento de la lista de personas
     for i in vector_nombres:
         procesarHorarioPersona(i)
+    
+    caja_de_texto.insert(0, "Se han procesado los horarios de todas las personas")
 
 
 # Crea un excel para cada empleado con sus respectivas entradas y salidas
 def dividirEmpleadosEnExcels():
     print("-------->dividirEmpleadosEnExcels")
-    caja_de_texto.insert(0, "Dividir los empleados en excels")
+    
 
     excelLimpio = pd.read_excel('limpio.xlsx')
     listaNombres = pd.read_excel('ListaNombres.xlsx')
@@ -191,7 +181,7 @@ def definirTurno():
 
 def limpiezaExcel(df):
     print("-------->limpiezaExcel")
-    caja_de_texto.insert(0, "Limpieza de Excel")
+    
     df = df.drop(columns=['Num', 'Department', 'Verifycode',
                  'Device ID', 'Device Name', 'UserExtFmt'])
 
@@ -199,7 +189,7 @@ def limpiezaExcel(df):
     df['Fecha'] = df['Date/Time'].str.extract('(....-..-..)', expand=True)
     df['Hora'] = df['Date/Time'].str.extract('(..:..:..)', expand=True)
 
-    caja_de_texto.insert(0, "Se ha realizado limpieza de datos")
+    
     df.to_excel('limpio.xlsx', index=False)
     return df
 
@@ -214,8 +204,7 @@ def extraerListaNombres(df):
 
     # exportar lista de nombres en un excel
     df.to_excel('ListaNombres.xlsx', index=False)
-    caja_de_texto.insert(0, "Se ha extraido la lista de personas")
-
+    
 
 def abrirArchivo():
     print("-------->abrirArchivo")
@@ -235,7 +224,7 @@ def abrirArchivo():
     dividirEmpleadosEnExcels()
     procesarTodosLosHorarios()
 
-
+#Devuelve la lista de personas (Se usa para la GUI)
 def cargarListaPersonas():
     excelNombres = pd.read_excel('ListaNombres.xlsx')
     excelNombres.reset_index(drop=True, inplace=True)
@@ -247,9 +236,7 @@ def cargarListaPersonas():
 
     return vlist
 
-
-if __name__ == "__main__":
-    #Antes que nada borrar todas las carpetas y archivos de alguna ejecucion pasada
+def limpiarCarpeta():
     try:
         remove("limpio.xlsx")
     except:
@@ -271,6 +258,11 @@ if __name__ == "__main__":
         print('Se borro ExcelsPersonas')
     except:
         print('No existe ExcelsPersonas asi que no se borra')
+
+
+if __name__ == "__main__":
+    #Antes que nada borrar todas las carpetas y archivos de alguna ejecucion pasada
+    limpiarCarpeta()
 
     #Interfaz
     raiz = Tk()

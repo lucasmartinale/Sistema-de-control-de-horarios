@@ -5,6 +5,8 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk
 import os
+from shutil import rmtree
+from os import remove
 
 
 def procesarHorarioPersona(_nombre_persona):
@@ -12,11 +14,11 @@ def procesarHorarioPersona(_nombre_persona):
     caja_de_texto.insert(0, "Procesar horario de persona")
 
     # Busca el path de la carpeta raiz
-    path_excelsPersonas = os.getcwd()
+    path_raiz = os.getcwd()
 
     # Abro el archivo de la persona
-    df = pd.read_excel(path_excelsPersonas +
-                       '\\ExcelsPersonas\\'+_nombre_persona)
+    df = pd.read_excel(path_raiz +
+                       '\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_horarios.xlsx')
     print("Abrio el archivo de excel de "+_nombre_persona)
 
     # guardo los nombres en un array
@@ -32,16 +34,13 @@ def procesarHorarioPersona(_nombre_persona):
     for i in cant_filas:
 
         if(i != df.shape[0]-1):   #Si no es la ultima fila
-            print("Fila:", i+2)
+
             #¿es un c/in?
             if(df.loc[i]["Clock-in/out"] == "C/In"):
 
                 # ¿El siguiente es un c/out?
                 #Si
                 if(df.loc[i+1]["Clock-in/out"] == "C/Out"):
-                    print("Es un C/OUT el que le sigue")
-                    print(df.loc[i+1]["Date/Time"])
-
                     #Se guardan las 2 filas en excel sin_errores
                     #Guarda primera fila
                     fila_a_insertar = {'Name': df.loc[i]['Name'],
@@ -87,8 +86,6 @@ def procesarHorarioPersona(_nombre_persona):
                                         }
                     
                     df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
-
-
             #Es un c/out
             else:
                 #Va a el excel de errores
@@ -111,9 +108,9 @@ def procesarHorarioPersona(_nombre_persona):
             else:
                 print("ES C/OUT")
 
-    df_sin_errores.to_excel('sin_errores.xlsx', index=False)
-    df_errores.to_excel('errores.xlsx', index=False)
-    
+    df_sin_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_sin_errores.xlsx', index=False)
+    df_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_errores.xlsx', index=False)
+   
     
 
 
@@ -121,12 +118,13 @@ def procesarTodosLosHorarios():
     print("-------->ProcesarTodosLosHorarios")
     caja_de_texto.insert(0, "Procesar todos los horarios")
     # TODO: Tomar la lista de personas y ponerla en un vector
-    
+    listaNombres = pd.read_excel('ListaNombres.xlsx')
+    vector_nombres = list(listaNombres['Name'])
 
     # TODO: Hacer un while que tome los excels de las personas
     # Dentro del while busca el nombre que coincide con el elemento de la lista de personas
-
-    procesarHorarioPersona("Barroso Maria Elena_horarios.xlsx")
+    for i in vector_nombres:
+        procesarHorarioPersona(i)
 
 
 # Crea un excel para cada empleado con sus respectivas entradas y salidas
@@ -145,15 +143,18 @@ def dividirEmpleadosEnExcels():
 
     # recorrer listaNombres
     for i in vector_nombres:
-
         filas_persona = excelLimpio['Name'] == i
         filas_que_cumplen = excelLimpio[filas_persona]
+
+        #Crea una carpeta por persona
+        os.makedirs('ExcelsPersonas/'+i)
+
 
         # Busca el path de la carpeta raiz
         path_excelsPersonas = os.getcwd()
         # Crea el excel en la carpeta ExcelPersonas que esta dentro de la carpeta raiz
         filas_que_cumplen.to_excel(
-            path_excelsPersonas+'/ExcelsPersonas/'+i+'_horarios.xlsx', index=False)
+            path_excelsPersonas+'\\ExcelsPersonas\\'+i+'\\'+i+'_horarios.xlsx', index=False)
 
 
 def definirTurno():
@@ -248,7 +249,30 @@ def cargarListaPersonas():
 
 
 if __name__ == "__main__":
+    #Antes que nada borrar todas las carpetas y archivos de alguna ejecucion pasada
+    try:
+        remove("limpio.xlsx")
+    except:
+        pass
 
+    try:        
+        remove("ListaNombres.xlsx")
+    except:
+        pass
+
+    try:
+        remove("soloEntradas.xlsx")
+    except:
+        pass
+
+    try:
+        path_raiz = os.getcwd()
+        rmtree(path_raiz+'\\ExcelsPersonas')
+        print('Se borro ExcelsPersonas')
+    except:
+        print('No existe ExcelsPersonas asi que no se borra')
+
+    #Interfaz
     raiz = Tk()
     raiz.geometry('410x350')
     raiz.title("Sistema de control de horarios - Hogar Don Bosco")

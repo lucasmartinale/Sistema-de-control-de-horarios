@@ -5,6 +5,8 @@ from ver_errores_persona import *
 import tkinter as tk
 
 
+
+
 #Devuelve la lista de personas (Se usa para la GUI)
 def cargarListaPersonas():
     excelNombres = pd.read_excel('ListaNombres.xlsx')
@@ -19,14 +21,16 @@ def cargarListaPersonas():
  
 
 def selection_changed(combo,calcular_sueldo_boton,ver_errores_boton):
-    opcion = combo.get()
-    ver_errores_boton.configure(state=tk.NORMAL, command=ventana_errores(opcion))
-    print("Se abrio la ventana de sueldo")
-    #calcular_sueldo_boton.configure(state=tk.NORMAL, command=)   
+    NOMBRE = combo.get()
+    ver_errores_boton.configure(state=tk.NORMAL, command=lambda:ventana_errores(NOMBRE))
+    calcular_sueldo_boton.configure(state=tk.NORMAL, command= lambda:crear_ventana_empleado(NOMBRE)) 
+    
 
 
 def ventana_seleccion_empleados():
-        #ventana 
+    NOMBRE=''
+
+    #ventana 
     root= Tk()
     root.title("Empleados")
 
@@ -44,20 +48,20 @@ def ventana_seleccion_empleados():
     calcular_sueldo_boton.grid(column=0,row=2,padx=10, pady=10)
     
 
-    ver_errores_boton= Button(frame_principal,text="Ver errores")
+    ver_errores_boton= Button(frame_principal,text="Ver errores",state=tk.DISABLED)
     ver_errores_boton.grid(column=1,row=2,padx=10, pady=10)
-
+    #ver_errores_boton.configure(state=tk.NORMAL, command=lambda:ventana_errores(NOMBRE))
 
     #Combobox
     vlist=cargarListaPersonas()
 
     combo = Combobox(frame_principal, values = vlist, state="readonly")
     combo.config(width=50)
-    #combo.set("Seleccione a un empleado")
+    combo.set("Seleccione a un empleado")
     combo.grid(column=0,row=1, columnspan=2) #columspan es para que ocupe mas de una grilla
-    combo.current(0)
     combo.bind("<<ComboboxSelected>>", lambda e:selection_changed(combo,calcular_sueldo_boton,ver_errores_boton))
 
+    
     root=mainloop()
 
 if __name__=="__main__":

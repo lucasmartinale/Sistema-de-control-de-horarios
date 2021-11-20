@@ -1,11 +1,19 @@
 from tkinter import *
 from tkinter.ttk import *
 
-def crear_ventana_empleado():
-    #ventana 
-    root= Tk()
-    root.title("Empleados")
+def crear_ventana_empleado(_nombre_persona):
+    if((_nombre_persona != '') or (_nombre_persona != 'Seleccione a un empleado')):
+        #ventana 
+        root= Tk()
+        root.title("Empleado {_nombre_persona}")
 
+        root=mainloop()
+    else:
+        print("No se imprimio la ventana porque esta vacio el dato2")
+
+if __name__=="__main__":
+    crear_ventana_empleado('ALMARAZ ANGELICA')
+    
 """     #Frame que va a contener a todos
     frame_principal= Frame(root) #el frame va a estar en el root
     frame_principal.grid()
@@ -29,7 +37,3 @@ def crear_ventana_empleado():
 
     ver_errores_boton= Button(frame_principal,text="Ver errores")
     ver_errores_boton.grid(column=1,row=2,padx=10, pady=10) """
-
-if __name__=="__main__":
-    crear_ventana_empleado()
-    root=mainloop()

@@ -287,4 +287,6 @@ if __name__ == "__main__":
     caja_de_texto = tk.Listbox(frame4)
     caja_de_texto.place(x=5, y=25, width=400, height=200)
 
+    caja_de_texto.insert(0, "Se estan procesando los datos, aguarde un momento...")
+
     raiz.mainloop()

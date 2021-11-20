@@ -3,7 +3,7 @@ import os
 from datetime import timedelta
 from datetime import datetime
 
-def AnalisisHoras(_nombre_persona):
+def calcular_horas_trabajadas(_nombre_persona):
 
     # Busca el path de la carpeta raiz
     path_raiz = os.getcwd()
@@ -73,4 +73,6 @@ def AnalisisHoras(_nombre_persona):
     #Exportar excel
     df_analisis.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_analisis.xlsx', index=False)
 
-AnalisisHoras("ALMARAZ ANGELICA")
+
+
+calcular_horas_trabajadas("ALMARAZ ANGELICA")

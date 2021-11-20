@@ -224,33 +224,22 @@ def abrirArchivo():
     dividirEmpleadosEnExcels()
     procesarTodosLosHorarios()
 
-#Devuelve la lista de personas (Se usa para la GUI)
-def cargarListaPersonas():
-    excelNombres = pd.read_excel('ListaNombres.xlsx')
-    excelNombres.reset_index(drop=True, inplace=True)
-    nombres = excelNombres["Name"]
-    vlist = []
-
-    for i in nombres:
-        vlist.append(i)
-
-    return vlist
 
 def limpiarCarpeta():
     try:
         remove("limpio.xlsx")
     except:
-        pass
+        print("No se pudo eliminar limpio.xlsx")
 
     try:        
         remove("ListaNombres.xlsx")
     except:
-        pass
+        print("No se pudo borrar ListaNombres.xlsx")
 
     try:
         remove("soloEntradas.xlsx")
     except:
-        pass
+        print("No se pudo borrar soloEntradas.xlsx")
 
     try:
         path_raiz = os.getcwd()

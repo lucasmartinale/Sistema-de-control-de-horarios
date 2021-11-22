@@ -52,7 +52,7 @@ def ventana_errores(_nombre_persona):
 
         # Busca el path de la carpeta raiz
         path_raiz = os.getcwd()
-        ruta= f'{path_raiz}\\ExcelsPersonas\\{_nombre_persona}\\{_nombre_persona}_horarios.xlsx'
+        ruta= f'{path_raiz}\\ExcelsPersonas\\{_nombre_persona}\\{_nombre_persona}_errores.xlsx'
 
         indica = Label(frame2, fg= 'white', bg='gray26', text=ruta , font= ('Arial',10,'bold') )
         indica.grid(column=3, row = 0)

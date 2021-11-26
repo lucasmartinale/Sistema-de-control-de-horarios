@@ -99,8 +99,8 @@ def calcular_turno(hora):
 #Le paso la lista de horas me devuelve la lista de turnos
 def calcular_total_a_pagar(lista_turnos_horas):
     total_precio_mañana =lista_turnos_horas.count("mañana") * PRECIO_HORA_MAÑANA
-    total_precio_tarde =lista_turnos_horas.count("mañana") * PRECIO_HORA_TARDE
-    total_precio_noche =lista_turnos_horas.count("mañana") * PRECIO_HORA_NOCHE
+    total_precio_tarde =lista_turnos_horas.count("tarde") * PRECIO_HORA_TARDE
+    total_precio_noche =lista_turnos_horas.count("noche") * PRECIO_HORA_NOCHE
     return total_precio_mañana + total_precio_tarde + total_precio_noche    
 
 def calcular_sueldo(horasyminutos, _nombre_persona):
@@ -113,6 +113,12 @@ def calcular_sueldo(horasyminutos, _nombre_persona):
     print("Abrio el archivo de excel de "+_nombre_persona)
 
     
+    df['Total a pagar'] = 0
+    df['Cantidad horas noche'] = 0
+    df['Cantidad horas tarde'] = 0
+    df['Cantidad horas mañana'] = 0
+
+    
     #Recorre todas las filas
     for i in range(0,df.shape[0]):
         #Traemos el campo 'Inicio' de la fila i
@@ -122,21 +128,32 @@ def calcular_sueldo(horasyminutos, _nombre_persona):
         lista_turnos_horas=[]
         #Agarro la primer hora y calculo el precio de esa hora
         lista_turnos_horas.append(calcular_turno(entrada.hour) )
-        total_a_pagar = calcular_total_a_pagar(lista_turnos_horas)
         
-        #Recorre las horas
-        for i in range(horasyminutos['horas'].size()-1):
-            total_a_pagar_aux=0
+        hora_siguiente=entrada
+        #Recorre las horas trabajadas agregando a la lista la palabra tarde noche o mañana
+        for j in range(int(df.loc[i]['Total'])-1):
             
-            hora_siguiente= entrada + timedelta(hours=1)
+                      
+            #Suma una hora a la 
+            hora_siguiente= hora_siguiente + timedelta(hours=1)
             
-            #lista_turnos_horas.append(calcular_turno(entrada.hour) )
-            total_a_pagar_aux = calcular_total_a_pagar(lista_turnos_horas)
+            print(f"hora siguiente {hora_siguiente}")
+            
+            #Calcula turno de esa hora siguiente y la añade a la lista
+            lista_turnos_horas.append(calcular_turno(hora_siguiente.hour) )
 
-            #lista_turnos_horas.clear()
-    
-        df.at[i,'total a pagar'] = total_a_pagar + total_a_pagar_aux
-    
+        
+        df.at[i, 'Cantidad horas noche'] = lista_turnos_horas.count('noche')
+        df.at[i, 'Cantidad horas tarde'] = lista_turnos_horas.count('tarde')
+        df.at[i, 'Cantidad horas mañana'] = lista_turnos_horas.count('mañana')
+
+        print(lista_turnos_horas)
+        total_a_pagar = calcular_total_a_pagar(lista_turnos_horas)
+        print(f"cantidad a pagar: {total_a_pagar}")
+        
+        df.at[i, 'Total a pagar'] = total_a_pagar
+
+
     #Exportar excel
     df.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_analisis.xlsx', index=False)
 

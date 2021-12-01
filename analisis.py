@@ -97,13 +97,13 @@ def calcular_turno(hora):
     return turno
 
 #Le paso la lista de horas me devuelve la lista de turnos
-def calcular_total_a_pagar(lista_turnos_horas):
-    total_precio_mañana =lista_turnos_horas.count("mañana") * PRECIO_HORA_MAÑANA
-    total_precio_tarde =lista_turnos_horas.count("tarde") * PRECIO_HORA_TARDE
-    total_precio_noche =lista_turnos_horas.count("noche") * PRECIO_HORA_NOCHE
+def calcular_total_a_pagar(lista_turnos_horas,precio_hora_mañana,precio_hora_tarde,precio_hora_noche):
+    total_precio_mañana =lista_turnos_horas.count("mañana") * precio_hora_mañana
+    total_precio_tarde =lista_turnos_horas.count("tarde") * precio_hora_tarde
+    total_precio_noche =lista_turnos_horas.count("noche") * precio_hora_noche
     return total_precio_mañana + total_precio_tarde + total_precio_noche    
 
-def calcular_sueldo(horasyminutos, _nombre_persona):
+def calcular_sueldo(horasyminutos, _nombre_persona, precio_hora_mañana,precio_hora_tarde,precio_hora_noche):
     # Busca el path de la carpeta raiz
     path_raiz = os.getcwd()
 
@@ -148,7 +148,7 @@ def calcular_sueldo(horasyminutos, _nombre_persona):
         df.at[i, 'Cantidad horas mañana'] = lista_turnos_horas.count('mañana')
 
         print(lista_turnos_horas)
-        total_a_pagar = calcular_total_a_pagar(lista_turnos_horas)
+        total_a_pagar = calcular_total_a_pagar(lista_turnos_horas,precio_hora_mañana,precio_hora_tarde,precio_hora_noche)
         print(f"cantidad a pagar: {total_a_pagar}")
         
         df.at[i, 'Total a pagar'] = total_a_pagar
@@ -157,7 +157,8 @@ def calcular_sueldo(horasyminutos, _nombre_persona):
     #Exportar excel
     df.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_analisis.xlsx', index=False)
 
+    return total_a_pagar
 
 if __name__=="__main__":
     horasyminutos = calcular_horas_trabajadas("ALMARAZ ANGELICA")
-    calcular_sueldo(horasyminutos,"ALMARAZ ANGELICA")
+    calcular_sueldo(horasyminutos,"ALMARAZ ANGELICA",50,50,50)

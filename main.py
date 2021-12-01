@@ -7,6 +7,7 @@ from tkinter import ttk
 import os
 from shutil import rmtree
 from os import remove
+from ventana_empleados import *
 
 
 def procesarHorarioPersona(_nombre_persona):
@@ -98,6 +99,7 @@ def procesarHorarioPersona(_nombre_persona):
                     
                 df_errores=df_errores.append(fila_a_insertar, ignore_index = True)
 
+    
     df_sin_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_sin_errores.xlsx', index=False)
     df_errores.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_errores.xlsx', index=False)
 
@@ -114,7 +116,13 @@ def procesarTodosLosHorarios():
     for i in vector_nombres:
         procesarHorarioPersona(i)
     
-    caja_de_texto.insert(0, "Se han procesado los horarios de todas las personas")
+    #Se avisa por medio de la caja de texto que se ha terminado de procesar
+    #caja_de_texto.insert(tk.END, "Se han procesado los horarios de todos los empleados")
+    #caja_de_texto.itemconfigure(tk.END, bg="#00aa00", fg="#fff")
+    
+    #Se habilita el boton para ver los empleados (porque ya estan listos los datos)
+    #boton_empleados.config(state="normal")
+    print("Se ha procesado toda la informacion")
 
 
 # Crea un excel para cada empleado con sus respectivas entradas y salidas
@@ -208,7 +216,7 @@ def extraerListaNombres(df):
 
 def abrirArchivo():
     print("-------->abrirArchivo")
-
+    #caja_de_texto.insert(tk.END, "Se estan procesando los datos, aguarde un momento...")
     path_archivo = filedialog.askopenfilename(
         title="Abrir", initialdir=r"C:\Users\Lucas\Desktop\Todo COMUNITARIAS\Practicas comunitarias Don Bosco")
     # en archivo se guarda el path del archivo que quiero abrir
@@ -216,6 +224,7 @@ def abrirArchivo():
     df = pd.read_excel(path_archivo)
     messagebox.showinfo(message="El archivo ha sido importado",
                         title="Horarios cargados")
+
 
     # Acciones que suceden despues de abrir el libro
     df = limpiezaExcel(df)  # guarda el limpio en df
@@ -255,38 +264,38 @@ if __name__ == "__main__":
 
     #Interfaz
     raiz = Tk()
-    raiz.geometry('410x350')
+    raiz.geometry('410x310')
     raiz.title("Sistema de control de horarios - Hogar Don Bosco")
+    raiz.resizable(0, 0)
 
     # Frames
-    frame = Frame(raiz, width=500, height=100)
-    frame.config(bg="deep sky blue")
-    frame.pack()
+    frame1=Frame(raiz)
+    frame1.grid(row=1)
 
-    frame2 = Frame(raiz, width=500, height=100)
-    frame2.config(bg="gold")
-    frame2.pack()
 
-    frame3 = Frame(raiz, width=500, height=100)
-    frame3.config(bg="SlateBlue2")
-    frame3.pack()
+    frame2=Frame(raiz)
+    frame2.grid(row=2)
 
-    frame4 = Frame(raiz, width=500, height=450)
-    frame4.config(bg="SpringGreen2")
-    frame4.pack()
+
+    frame3=Frame(raiz)
+    frame3.grid(row=3)
+
+    frame4=Frame(raiz)
+    frame4.grid(row=4)
 
     # Elementos de la ventana
-    label = Label(frame, text="Hogar Don Bosco")
+    label = Label(frame1, text="Hogar Don Bosco")
     label.config(font=("Arial", 24))
     label.pack()
 
     # ...........................................
 
-    Button(frame2, text="Abrir archivo", command=abrirArchivo).pack()
+    Button(frame2, text="Abrir archivo", command=abrirArchivo).grid(padx=5,pady=5, row=0, column=1)
 
-    caja_de_texto = tk.Listbox(frame4)
-    caja_de_texto.place(x=5, y=25, width=400, height=200)
+    #TODO: Reparar caja de avisos
+    caja_de_texto = tk.Listbox(frame3, width=66).grid(padx=5,pady=5, row=0, column=1)
 
-    caja_de_texto.insert(0, "Se estan procesando los datos, aguarde un momento...")
+    #TODO: Reparar boton para desactivar y activar
+    boton_empleados = Button(frame4, text="Ver Empleados",command=ventana_seleccion_empleados).grid(padx=5,pady=5, row=0, column=1)
 
     raiz.mainloop()

@@ -106,22 +106,20 @@ def procesarHorarioPersona(_nombre_persona):
 
 def procesarTodosLosHorarios():
     print("-------->ProcesarTodosLosHorarios")
-    
-    # TODO: Tomar la lista de personas y ponerla en un vector
+        
     listaNombres = pd.read_excel('ListaNombres.xlsx')
     vector_nombres = list(listaNombres['Name'])
 
-    # TODO: Hacer un while que tome los excels de las personas
     # Dentro del while busca el nombre que coincide con el elemento de la lista de personas
     for i in vector_nombres:
         procesarHorarioPersona(i)
     
     #Se avisa por medio de la caja de texto que se ha terminado de procesar
-    #caja_de_texto.insert(tk.END, "Se han procesado los horarios de todos los empleados")
-    #caja_de_texto.itemconfigure(tk.END, bg="#00aa00", fg="#fff")
+    caja_de_texto.insert(tk.END, "Se han procesado los horarios de todos los empleados")
+    caja_de_texto.itemconfigure(tk.END, bg="#00aa00", fg="#fff")
     
     #Se habilita el boton para ver los empleados (porque ya estan listos los datos)
-    #boton_empleados.config(state="normal")
+    boton_empleados.config(state="normal")
     print("Se ha procesado toda la informacion")
 
 
@@ -129,7 +127,6 @@ def procesarTodosLosHorarios():
 def dividirEmpleadosEnExcels():
     print("-------->dividirEmpleadosEnExcels")
     
-
     excelLimpio = pd.read_excel('limpio.xlsx')
     listaNombres = pd.read_excel('ListaNombres.xlsx')
 
@@ -154,37 +151,6 @@ def dividirEmpleadosEnExcels():
         filas_que_cumplen.to_excel(
             path_excelsPersonas+'\\ExcelsPersonas\\'+i+'\\'+i+'_horarios.xlsx', index=False)
 
-
-def definirTurno():
-    print("-------->definirTurno")
-    excelLimpio = pd.read_excel('limpio.xlsx')
-    # Se filtran las filas que son C/in (osea entradas)
-    entradas_cin = excelLimpio['Clock-in/out'] == "C/In"
-    entradas_limpias = excelLimpio[entradas_cin]
-    entradas_limpias.to_excel('soloEntradas.xlsx', index=False)
-
-    excelLimpio = pd.read_excel('soloEntradas.xlsx')
-    excelLimpio['Turno'] = "Nada"
-
-    for i, fila in excelLimpio.iterrows():
-        # con ese numero determinar el turno
-        # extraemos los dos primeros caracteres
-        subcadena = fila['Hora'][0:2]
-        # lo convertimos en numero
-        numero_hora = int(subcadena)
-        # en base al numero determinamos el turno
-
-        if 20 <= numero_hora <= 23:
-            excelLimpio.at[i, 'Turno'] = 'Nocturno'
-        elif 0 <= numero_hora <= 3:
-            excelLimpio.at[i, 'Turno'] = 'Nocturno'
-        elif 4 <= numero_hora <= 12:
-            excelLimpio.at[i, 'Turno'] = 'Mañana'
-        elif 13 <= numero_hora <= 19:
-            excelLimpio.at[i, 'Turno'] = 'Tarde'
-        else:
-            print("Error")
-    excelLimpio.to_excel('soloEntradas.xlsx', index=False)
 
 
 def limpiezaExcel(df):
@@ -216,7 +182,7 @@ def extraerListaNombres(df):
 
 def abrirArchivo():
     print("-------->abrirArchivo")
-    #caja_de_texto.insert(tk.END, "Se estan procesando los datos, aguarde un momento...")
+    
     path_archivo = filedialog.askopenfilename(
         title="Abrir", initialdir=r"C:\Users\Lucas\Desktop\Todo COMUNITARIAS\Practicas comunitarias Don Bosco")
     # en archivo se guarda el path del archivo que quiero abrir
@@ -224,7 +190,6 @@ def abrirArchivo():
     df = pd.read_excel(path_archivo)
     messagebox.showinfo(message="El archivo ha sido importado",
                         title="Horarios cargados")
-
 
     # Acciones que suceden despues de abrir el libro
     df = limpiezaExcel(df)  # guarda el limpio en df
@@ -292,10 +257,10 @@ if __name__ == "__main__":
 
     Button(frame2, text="Abrir archivo", command=abrirArchivo).grid(padx=5,pady=5, row=0, column=1)
 
-    #TODO: Reparar caja de avisos
-    caja_de_texto = tk.Listbox(frame3, width=66).grid(padx=5,pady=5, row=0, column=1)
+    caja_de_texto = tk.Listbox(frame3, width=66)
+    caja_de_texto.grid(padx=5,pady=5, row=0, column=1)
 
-    #TODO: Reparar boton para desactivar y activar
-    boton_empleados = Button(frame4, text="Ver Empleados",command=ventana_seleccion_empleados).grid(padx=5,pady=5, row=0, column=1)
+    boton_empleados = Button(frame4, text="Ver Empleados",state="disabled", command=ventana_seleccion_empleados)
+    boton_empleados.grid(padx=5,pady=5, row=0, column=1)
 
     raiz.mainloop()

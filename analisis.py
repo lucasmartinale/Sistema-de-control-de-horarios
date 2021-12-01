@@ -4,9 +4,6 @@ import os
 from datetime import timedelta
 from datetime import datetime
 
-PRECIO_HORA_MAÑANA=100
-PRECIO_HORA_TARDE=101
-PRECIO_HORA_NOCHE=150
 
 def calcular_horas_trabajadas(_nombre_persona):
 
@@ -149,16 +146,18 @@ def calcular_sueldo(horasyminutos, _nombre_persona, precio_hora_mañana,precio_h
 
         print(lista_turnos_horas)
         total_a_pagar = calcular_total_a_pagar(lista_turnos_horas,precio_hora_mañana,precio_hora_tarde,precio_hora_noche)
-        print(f"cantidad a pagar: {total_a_pagar}")
+        
         
         df.at[i, 'Total a pagar'] = total_a_pagar
 
 
+    sueldo_calculado = df['Total a pagar'] .sum()
+    print(f"cantidad a pagar: {sueldo_calculado}")
     #Exportar excel
     df.to_excel(path_raiz +'\\ExcelsPersonas\\'+_nombre_persona+'\\'+_nombre_persona+'_analisis.xlsx', index=False)
-
-    return total_a_pagar
+    
+    return sueldo_calculado
 
 if __name__=="__main__":
     horasyminutos = calcular_horas_trabajadas("ALMARAZ ANGELICA")
-    calcular_sueldo(horasyminutos,"ALMARAZ ANGELICA",50,50,50)
+    calcular_sueldo(horasyminutos,"ALMARAZ ANGELICA",300,300,400)

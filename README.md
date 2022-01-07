@@ -5,6 +5,7 @@ Es un proyecto que realize en Python que realiza un calculo de los sueldos en ba
 En el proyecto se utilizan librerias principalmente las librerias de Pandas para la limpieza y analisis de los datos, y Tkinter para la interfaz grafica
 
 Video demo:
+
 [<img src="https://img.youtube.com/vi/cq4sHIlNKjA/maxresdefault.jpg" width="50%">](https://youtu.be/cq4sHIlNKjA)
 
 ## Authors
